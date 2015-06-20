@@ -11,7 +11,8 @@ import logging
 from time import time
 from bitstring import ConstBitStream
 import coords
-
+from motor import Motor
+import RPi.GPIO as GPIO
 from coords import transformar_coordenadas
 
 
@@ -20,7 +21,8 @@ logging.basicConfig(level=logging.DEBUG, format="%(filename)s: %(funcName)s - %(
 
 #  Gerencia a Thread de conexao com o Stellarium
 class Telescope_Channel(asyncore.dispatcher):
- 
+    az_ant = 0
+    az_pos = 0
     def __init__(self, conn_sock):
         self.is_writable = False
         self.buffer = ''
@@ -66,12 +68,22 @@ class Telescope_Channel(asyncore.dispatcher):
             logging.debug("Size: %d, Type: %d, Time: %d, RA: %d (%s), DEC: %d (%s)" % (msize, mtype, mtime, ra_uint, ra, dec_int, dec))
                        
             (ra, dec, time) = coords.int_2_rads(ra_uint, dec_int, mtime)
-            
-            
+
             x = transformar_coordenadas(dec, ra)
-            
-            
-            logging.debug("Azimute: %d, Altitude: %d" % x.get_azi_alt())
+            az,alt = x.get_azi_alt()
+            motor_az = Motor([31,33,35,37])
+            motor_az.rpm = 15
+
+            motor_alt = Motor([32,36,38,40])
+            motor_alt.rpm = 15
+
+            motor_az.move_to(az-self.az_ant)
+            self.az_ant = az
+
+            motor_alt.move_to(alt-self.alt_ant)
+            self.alt_ant = alt
+
+            logging.debug("Azimute: %d, Altitude: %d" % (az,alt))
             
             # envia as cordenadas para o Stellarium
             self.act_pos(ra, dec)
@@ -117,7 +129,7 @@ class Telescope_Server(asyncore.dispatcher):
         logging.info(self.__class__.__name__ + " Servidor Rodando.")
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         self.set_reuse_addr()
-        self.bind(('localhost', self.port))
+        self.bind(('192.168.25.128', self.port))
         self.listen(1)
         self.connected = False
         asyncore.loop()
@@ -140,4 +152,5 @@ if __name__ == '__main__':
         Server = Telescope_Server()
         Server.run()
     except KeyboardInterrupt:
+        GPIO.cleanup()
         logging.debug("\nDesconectado!")
