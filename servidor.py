@@ -74,16 +74,16 @@ class Telescope_Channel(asyncore.dispatcher):
             az,alt = x.get_azi_alt()
 
             #instancia o motor de azimute nos pinos 12, 16, 20 e 21 do RPi
-            motor_az = Motor([31,33,35,37])
-            motor_az.rpm = 15
+            #motor_az = Motor([31,33,35,37])
+            #motor_az.rpm = 15
 
             motor_alt = Motor([32,36,38,40])
             motor_alt.rpm = 15
 
-            motor_az.move_to(az-self.az_anterior)
+            #motor_az.move_to(az-self.az_anterior)
             self.az_anterior = az
 
-            motor_alt.move_to(180)
+            motor_alt.move_to(alt-self.alt_anterior)
             self.alt_anterior = alt
 
             logging.debug("Azimute: %d, Altitude: %d" % (az,alt))
