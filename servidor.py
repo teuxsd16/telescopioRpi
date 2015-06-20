@@ -23,8 +23,8 @@ logging.basicConfig(level=logging.DEBUG, format="%(filename)s: %(funcName)s - %(
 class Telescope_Channel(asyncore.dispatcher):
 
     def __init__(self, conn_sock):
-        self.az_ant = 0
-        self.az_pos = 0
+        self.az_anterior = 0
+        self.alt_anterior = 0
         self.is_writable = False
         self.buffer = ''
         asyncore.dispatcher.__init__(self, conn_sock)
@@ -79,10 +79,10 @@ class Telescope_Channel(asyncore.dispatcher):
             motor_alt.rpm = 15
 
             motor_az.move_to(az-self.az_ant)
-            self.az_ant = az
+            self.az_anterior = az
 
             motor_alt.move_to(alt-self.alt_ant)
-            self.alt_ant = alt
+            self.alt_anterior = alt
 
             logging.debug("Azimute: %d, Altitude: %d" % (az,alt))
             
