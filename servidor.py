@@ -76,7 +76,7 @@ class Telescope_Channel(asyncore.dispatcher):
             #instancia o motor de azimute nos pinos 12, 16, 20 e 21 do RPi
             motor_az = Motor([31,33,35,37])
             motor_az.rpm = 5
-            motor_az.mode = 3
+            motor_az.mode = 2
             motor_az.move_to(az-self.az_anterior)
             self.az_anterior = az
 
