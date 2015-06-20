@@ -78,10 +78,10 @@ class Telescope_Channel(asyncore.dispatcher):
             motor_alt = Motor([32,36,38,40])
             motor_alt.rpm = 15
 
-            motor_az.move_to(az-self.az_ant)
+            motor_az.move_to(az-self.az_anterior)
             self.az_anterior = az
 
-            motor_alt.move_to(alt-self.alt_ant)
+            motor_alt.move_to(alt-self.alt_anterior)
             self.alt_anterior = alt
 
             logging.debug("Azimute: %d, Altitude: %d" % (az,alt))
