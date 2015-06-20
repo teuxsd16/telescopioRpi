@@ -21,9 +21,10 @@ logging.basicConfig(level=logging.DEBUG, format="%(filename)s: %(funcName)s - %(
 
 #  Gerencia a Thread de conexao com o Stellarium
 class Telescope_Channel(asyncore.dispatcher):
-    az_ant = 0
-    az_pos = 0
+
     def __init__(self, conn_sock):
+        self.az_ant = 0
+        self.az_pos = 0
         self.is_writable = False
         self.buffer = ''
         asyncore.dispatcher.__init__(self, conn_sock)
