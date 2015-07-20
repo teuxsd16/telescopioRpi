@@ -7,15 +7,16 @@ Created on Apr 27, 2015
 @author: Israel P. Siqueira
 '''
 
-import asyncore, socket
+import asyncore
+import socket
 import logging
 from time import time
+
 from bitstring import ConstBitStream
 import coords
 from motor import Motor
 import RPi.GPIO as GPIO
 from coords import transformar_coordenadas
-
 
 logging.basicConfig(level=logging.DEBUG, format="%(filename)s: %(funcName)s - %(levelname)s: %(message)s")
  
