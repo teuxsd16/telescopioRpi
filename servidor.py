@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
 '''
 Created on Apr 27, 2015
 
@@ -83,7 +84,7 @@ class Telescope_Channel(asyncore.dispatcher):
             #instancia o motor de azimute nos pinos 32, 36, 38 e 40 do RPi
             motor_alt = Motor([32,36,38,40])
             motor_alt.rpm = 5
-            motor_alt.mode = 3
+            motor_alt.mode = 2
             motor_alt.move_to(alt-self.alt_anterior)
             self.alt_anterior = alt
 
@@ -99,13 +100,12 @@ class Telescope_Channel(asyncore.dispatcher):
         for i in range(10):
             self.move(ra_p, dec_p)
  
-    # # Envia as coordenadas para o Stellarium novamente
+    #Envia as coordenadas para o Stellarium novamente
     def move(self, ra, dec):
         msize = '0x1800'
         mtype = '0x0000'
         localtime = ConstBitStream(str.replace('int:64=%r' % time(), '.', ''))
-        # print "move: (%d, %d)" % (ra, dec)
- 
+
         sdata = ConstBitStream(msize) + ConstBitStream(mtype)
         sdata += ConstBitStream(intle=localtime.intle, length=64) + ConstBitStream(uintle=ra, length=32)
         sdata += ConstBitStream(intle=dec, length=32) + ConstBitStream(intle=0, length=32)
@@ -150,7 +150,7 @@ class Telescope_Server(asyncore.dispatcher):
         if self.connected:
             self.conn.close()
  
-# Run a Telescope Server
+# Roda o servidor do telescopio
 if __name__ == '__main__':
     try:
         Server = Telescope_Server()
